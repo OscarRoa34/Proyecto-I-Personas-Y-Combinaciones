@@ -13,12 +13,4 @@ public enum Gender {
     public String getRepresentacion() {
         return representacion;
     }
-
-    boolean startsWith(String nombre) {
-        throw new UnsupportedOperationException("Unimplemented method 'startsWith'");
-    }
-
-    String substring(int i) {
-        throw new UnsupportedOperationException("Unimplemented method 'substring'");
-    }
 }

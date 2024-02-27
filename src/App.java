@@ -5,7 +5,7 @@ import co.edu.uptc.models.NameAndGender;
 import co.edu.uptc.services.CombinationService;
 
 public class App {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         FileController fc = new FileController();
         List<String> apellidos = fc.readLastNamesFile("data\\Apellidos.txt");
 

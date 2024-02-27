@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
 import co.edu.uptc.models.Gender;
 import co.edu.uptc.models.NameAndGender;
 
@@ -29,10 +28,7 @@ public class FileController {
                         namesAndGenders.add(new NameAndGender(nombre, Gender.MALE));
                     } else if ("FEMENINO".equals(genero)) {
                         namesAndGenders.add(new NameAndGender(nombre, Gender.FEMALE));
-                    } else {
-                        // Manejo de error, ya que el género no es ni "MASCULINO" ni "FEMENINO"
                     }
-
                 }
             }
 
