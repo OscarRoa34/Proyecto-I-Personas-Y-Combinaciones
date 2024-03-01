@@ -14,16 +14,24 @@ import co.edu.uptc.models.NameAndGender;
 public class FileController {
 
     public List<NameAndGender> readNamesFile(String path) {
+        // Lista que almacenará nombres y géneros leídos del archivo
         List<NameAndGender> namesAndGenders = new ArrayList<>();
+
         try (FileInputStream fis = new FileInputStream(path);
                 BufferedReader br = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8))) {
 
+            // Leer cada línea del archivo
             String line;
             while ((line = br.readLine()) != null) {
+                // Verificar si la línea contiene un espacio (nombre y género)
                 if (line.contains(" ")) {
+                    // Dividir la línea en partes usando el espacio como separador
                     String[] parts = line.split(" ");
+                    // Extraer el nombre y el género
                     String nombre = parts[0];
                     String genero = parts[1].toUpperCase();
+
+                    // Crear un objeto NameAndGender y agregarlo a la lista
                     if ("MASCULINO".equals(genero)) {
                         namesAndGenders.add(new NameAndGender(nombre, Gender.MALE));
                     } else if ("FEMENINO".equals(genero)) {
@@ -33,61 +41,39 @@ public class FileController {
             }
 
         } catch (FileNotFoundException e) {
+            // Manejar la excepción de archivo no encontrado
             e.printStackTrace();
         } catch (IOException e) {
+            // Manejar la excepción de entrada/salida
             e.printStackTrace();
         }
+
+        // Devolver la lista de nombres y géneros leídos del archivo
         return namesAndGenders;
     }
 
-    /*
-     * public List<Gender> readGendersFile(String path) {
-     * List<Gender> listaGeneros = new ArrayList<>();
-     * try (FileInputStream fis = new FileInputStream(path);
-     * BufferedReader br = new BufferedReader(new InputStreamReader(fis,
-     * StandardCharsets.UTF_8))) {
-     * 
-     * String line;
-     * while ((line = br.readLine()) != null) {
-     * if (line.contains(" ")) {
-     * String generoStr = line.substring(line.indexOf(" ") + 1);
-     * 
-     * Gender genero;
-     * if (generoStr.equalsIgnoreCase("Masculino")) {
-     * genero = Gender.MALE;
-     * } else if (generoStr.equalsIgnoreCase("Femenino")) {
-     * genero = Gender.FEMALE;
-     * } else {
-     * throw new IllegalArgumentException("Género desconocido: " + generoStr);
-     * }
-     * 
-     * listaGeneros.add(genero);
-     * }
-     * }
-     * 
-     * } catch (FileNotFoundException e) {
-     * e.printStackTrace();
-     * } catch (IOException e) {
-     * e.printStackTrace();
-     * }
-     * return listaGeneros;
-     * }
-     */
     public List<String> readLastNamesFile(String path) {
+        // Lista que almacenará apellidos leídos del archivo
         List<String> listaApellidos = new ArrayList<>();
+
         try (FileInputStream fis = new FileInputStream(path);
                 BufferedReader br = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8))) {
 
+            // Leer cada línea del archivo y agregar el apellido a la lista
             String line;
             while ((line = br.readLine()) != null) {
                 listaApellidos.add(line);
             }
 
         } catch (FileNotFoundException e) {
+            // Manejar la excepción de archivo no encontrado
             e.printStackTrace();
         } catch (IOException e) {
+            // Manejar la excepción de entrada/salida
             e.printStackTrace();
         }
+
+        // Devolver la lista de apellidos leídos del archivo
         return listaApellidos;
     }
 }
