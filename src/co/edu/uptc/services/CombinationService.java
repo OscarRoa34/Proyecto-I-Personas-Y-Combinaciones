@@ -2,104 +2,80 @@ package co.edu.uptc.services;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import co.edu.uptc.controllers.FileController;
 import co.edu.uptc.models.NameAndGender;
 
 public class CombinationService {
 
-    public List<String> combineNamesWithLastNames(List<NameAndGender> namesAndGenders, List<String> apellidos,
-            int numNombres, int numApellidos) {
-        // Lista que almacena todas las combinaciones de personas ficticias
-        List<String> combinedPersons = new ArrayList<>();
+    private List<NameAndGender> namesAndGenders;
+    private List<String> lastNames;
+    private List<String> combinedPersons;
+    private List<String> currentCombination;
 
-        // Inicia el proceso de generación de combinaciones
-        generateCombinations(namesAndGenders, apellidos, numNombres, numApellidos, 0, new ArrayList<>(),
-                combinedPersons);
+    public CombinationService() {
+        this.namesAndGenders = (new FileController().readNamesFile(
+                "C:\\Users\\oscar\\OneDrive\\Escritorio\\Universidad\\Programacion II\\Proyecto I\\Proyecto I\\data\\Nombres.txt"));
+        this.lastNames = (new FileController().readLastNamesFile(
+                "C:\\Users\\oscar\\OneDrive\\Escritorio\\Universidad\\Programacion II\\Proyecto I\\Proyecto I\\data\\Apellidos.txt"));
+        this.combinedPersons = new ArrayList<>();
+        this.currentCombination = new ArrayList<>();
+    }
 
-        // Devuelve la lista de combinaciones generadas
+    public List<String> combineNamesWithLastNames(int numberOfNames, int numberOfLastNames) {
+        generateCombinations(numberOfNames, numberOfLastNames);
         return combinedPersons;
     }
 
-    private void generateCombinations(List<NameAndGender> namesAndGenders, List<String> apellidos, int numNombres,
-            int numApellidos, int currentIndex, List<String> currentCombination, List<String> combinedPersons) {
-        // Verifica si se alcanzo el numero de nombres
-        if (currentIndex == numNombres) {
-            // Llama a generateCombinationsForApellidos para generar combinaciones de
-            // apellidos
-            generateCombinationsForApellidos(apellidos, numApellidos, 0, currentCombination, combinedPersons);
+    private void generateCombinations(int numberOfNames, int numberOfLastNames) {
+        if (currentCombination.size() == numberOfNames) {
+            generateCombinationsForlastNames(numberOfLastNames, 0);
             return;
         }
 
-        // Itera sobre cada persona en la lista de nombres y generos
         for (NameAndGender person : namesAndGenders) {
-            // Verifica el genero antes de agregar el nombre a la combinación
-            if (currentCombination.isEmpty() || gendersAreCompatible(person, currentCombination, namesAndGenders)) {
-                // Agrega el nombre a la combinación actual
+            if (!currentCombination.contains(person.getName()) &&
+                    (currentCombination.isEmpty() || gendersAreCompatible(person))) {
                 currentCombination.add(person.getName());
-
-                // Llama recursivamente para generar combinaciones para el siguiente nombre
-                generateCombinations(namesAndGenders, apellidos, numNombres, numApellidos, currentIndex + 1,
-                        currentCombination, combinedPersons);
-
-                // Eliminar el ultimo nombre agregado para probar con otro
+                generateCombinations(numberOfNames, numberOfLastNames);
                 currentCombination.remove(currentCombination.size() - 1);
             }
         }
     }
 
-    private void generateCombinationsForApellidos(List<String> apellidos, int numApellidos, int currentIndex,
-            List<String> currentCombination, List<String> combinedPersons) {
-        // Verifica si se alcanzo el numero de apellidos
-        if (currentIndex == numApellidos) {
-            // Agrega la combinación de nombres y apellidos a una cadena
+    private void generateCombinationsForlastNames(int numberOfLastNames, int currentIndex) {
+        if (currentIndex == numberOfLastNames) {
             StringBuilder combination = new StringBuilder();
             for (String name : currentCombination) {
                 combination.append(name).append(" ");
             }
-            // Agrega la combinacion a la lista de personas combinadas
             combinedPersons.add(combination.toString().trim());
             return;
         }
 
-        // Itera sobre cada apellido en la lista de apellidos
-        for (String apellido : apellidos) {
-            // Agrega el apellido a la combinación actual
+        for (String apellido : lastNames) {
             currentCombination.add(apellido);
-
-            // LLama recursivamente para generar combinaciones para el siguiente apellido
-            generateCombinationsForApellidos(apellidos, numApellidos, currentIndex + 1, currentCombination,
-                    combinedPersons);
-
-            // Eliminar el ultimo apellido agregado para probar con otro
+            generateCombinationsForlastNames(numberOfLastNames, currentIndex + 1);
             currentCombination.remove(currentCombination.size() - 1);
         }
     }
 
-    private boolean gendersAreCompatible(NameAndGender person, List<String> currentCombination,
-            List<NameAndGender> namesAndGenders) {
-        // Itera sobre cada nombre en la combinación actual
+    private boolean gendersAreCompatible(NameAndGender person) {
         for (String name : currentCombination) {
-            // Encontrar la persona correspondiente al nombre en la lista completa de
-            // nombres y generos
-            NameAndGender existingPerson = findPersonByName(name, namesAndGenders);
-            // Verifica si las personas tienen generos diferentes
+            NameAndGender existingPerson = findPersonByName(name);
             if (existingPerson != null && existingPerson.getGender() != person.getGender()) {
-                return false; // Generos incompatibles
+                return false;
             }
         }
-        return true; // Generos compatibles
+        return true;
     }
 
-    private NameAndGender findPersonByName(String name, List<NameAndGender> namesAndGenders) {
-        // Itera sobre cada persona en la lista de nombres y generos
+    private NameAndGender findPersonByName(String name) {
         for (NameAndGender person : namesAndGenders) {
-            // Compara el nombre de la persona con el nombre proporcionado
             if (person.getName().equals(name)) {
-                // Retorna la persona si se encuentra una coincidencia
                 return person;
             }
         }
-        // Retorna null si no se encuentra ninguna persona con el nombre dado
         return null;
     }
-
 }
