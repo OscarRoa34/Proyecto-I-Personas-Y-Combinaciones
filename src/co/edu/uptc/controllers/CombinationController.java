@@ -5,13 +5,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import co.edu.uptc.services.CombinationService;
+import co.edu.uptc.services.PropertiesService;
 
 public class CombinationController {
+
+    private PropertiesService p = new PropertiesService();
 
     public void generatePersons(int numNombres, int numApellidos, String separator, int modificacionMayusMinus) {
         CombinationService combinationService = new CombinationService();
         List<String> allCombinations = combinationService.combineNamesWithLastNames(numApellidos, numNombres);
-        String outputPath = "output/Combinaciones.txt";
+        String outputPath = p.getProperties("file_combinationsOutput");
         writeCombinationsToFile(allCombinations, outputPath, separator, modificacionMayusMinus);
         System.out.println("Combinaciones guardadas en: " + outputPath);
     }

@@ -11,10 +11,12 @@ public class CombinationService {
     private List<String> lastNames;
     private List<String> combinedPersons;
     private List<String> currentCombination;
+    private PropertiesService p;
 
     public CombinationService() {
-        this.namesAndGenders = (new FileController().readNamesAndGendersFile("data/Nombres.txt"));
-        this.lastNames = (new FileController().readLastNamesFile("data/Apellidos.txt"));
+        this.p = new PropertiesService();
+        this.namesAndGenders = (new FileController().readNamesAndGendersFile(p.getProperties("file_names")));
+        this.lastNames = (new FileController().readLastNamesFile(p.getProperties("file_lastNames")));
         this.combinedPersons = new ArrayList<>();
         this.currentCombination = new ArrayList<>();
     }
@@ -40,8 +42,8 @@ public class CombinationService {
         }
     }
 
-    private void generateCombinationsForlastNames(int numberOfLastNames, int currentIndex) {
-        if (currentIndex == numberOfLastNames) {
+    private void generateCombinationsForlastNames(int numberOfLastNames, int index) {
+        if (index == numberOfLastNames) {
             StringBuilder combination = new StringBuilder();
             for (String name : currentCombination) {
                 combination.append(name).append(" ");
@@ -52,7 +54,7 @@ public class CombinationService {
 
         for (String apellido : lastNames) {
             currentCombination.add(apellido);
-            generateCombinationsForlastNames(numberOfLastNames, currentIndex + 1);
+            generateCombinationsForlastNames(numberOfLastNames, index + 1);
 
             currentCombination.remove(currentCombination.size() - 1);
         }
