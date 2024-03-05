@@ -10,12 +10,9 @@ public class CombinationController {
 
     public void generatePersons(int numNombres, int numApellidos, String separator, int modificacionMayusMinus) {
         CombinationService combinationService = new CombinationService();
-
         List<String> allCombinations = combinationService.combineNamesWithLastNames(numApellidos, numNombres);
-        String outputPath = "C:\\Users\\oscar\\OneDrive\\Escritorio\\Universidad\\Programacion II\\Proyecto I\\Proyecto I\\output\\combinaciones.txt";
-
+        String outputPath = "output/Combinaciones.txt";
         writeCombinationsToFile(allCombinations, outputPath, separator, modificacionMayusMinus);
-
         System.out.println("Combinaciones guardadas en: " + outputPath);
     }
 
@@ -23,7 +20,6 @@ public class CombinationController {
             int modificacionMayusMinus) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath))) {
             for (String combination : combinations) {
-                // Aplicar las modificaciones según el valor de modificacionMayusMinus
                 switch (modificacionMayusMinus) {
                     case 1:
                         combination = combination.toUpperCase();
@@ -34,10 +30,7 @@ public class CombinationController {
                     case 3:
                         combination = capitalizeEachWord(combination);
                         break;
-                    // Agregar más casos según sea necesario
-
                     default:
-                        // No hacer ninguna modificación
                 }
 
                 String[] parts = combination.split(" ");
@@ -52,7 +45,6 @@ public class CombinationController {
         }
     }
 
-    // Método para capitalizar cada palabra en una cadena
     private String capitalizeEachWord(String input) {
         StringBuilder result = new StringBuilder();
         String[] words = input.split(" ");
